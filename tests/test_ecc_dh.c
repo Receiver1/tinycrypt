@@ -65,7 +65,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <fcntl.h>
 
 int ecdh_vectors(char **qx_vec, char **qy_vec, char **d_vec, char **z_vec,

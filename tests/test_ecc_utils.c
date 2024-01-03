@@ -62,10 +62,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <fcntl.h>
 #include <stdbool.h>
-#include <unistd.h>
 
 int hex2int (char hex)
 {
@@ -132,8 +130,14 @@ void string2scalar(unsigned int *scalar, unsigned int num_word32, char *str)
 {
 
 	unsigned int num_bytes = 4 * num_word32;
-	uint8_t tmp[num_bytes];
+	uint8_t* tmp = (uint8_t*)malloc(num_bytes);
 	size_t hexlen = strlen(str);
+
+	if (tmp == NULL)
+	{
+		printf("Error: malloc(num_bytes(%d))\n", num_bytes);
+		exit(-1);
+	}
 
 	int padding;
 
@@ -141,6 +145,7 @@ void string2scalar(unsigned int *scalar, unsigned int num_word32, char *str)
 	{
 		printf("Error: 2 * num_bytes(%d) < strlen(hex) (%zu)\n",
 		       2 * num_bytes, strlen(str));
+		free(tmp);
 		exit(-1);
 	}
 
@@ -148,10 +153,11 @@ void string2scalar(unsigned int *scalar, unsigned int num_word32, char *str)
 
 	if (false == hex2bin(tmp + padding / 2, num_bytes, str, hexlen))
 	{
+		free(tmp);
 		exit(-1);
 	}
 	uECC_vli_bytesToNative(scalar, tmp, num_bytes);
-
+	free(tmp);
 }
 
 void vli_print_bytes(uint8_t *vli, unsigned int size)

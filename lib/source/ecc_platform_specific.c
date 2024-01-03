@@ -101,5 +101,29 @@ int default_CSPRNG(uint8_t *dest, unsigned int size) {
   return 1;
 }
 
+#elif defined(_WINDOWS) || defined(_WIN32)
+
+#include <windows.h>
+#include <stdint.h>
+
+int default_CSPRNG(uint8_t *dest, unsigned int size) {
+    /* input sanity check: */
+    if (dest == NULL || size <= 0)
+        return 0;
+
+    HCRYPTPROV hCryptProv;
+    if (!CryptAcquireContext(&hCryptProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
+        return 0;
+    }
+
+    if (!CryptGenRandom(hCryptProv, size, dest)) {
+        CryptReleaseContext(hCryptProv, 0);
+        return 0;
+    }
+
+    CryptReleaseContext(hCryptProv, 0);
+    return 1;
+}
+
 #endif /* platform */
 
