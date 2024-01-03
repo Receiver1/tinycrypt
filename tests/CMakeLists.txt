@@ -23,4 +23,5 @@ foreach(test_src ${TEST_SOURCES})
         LINKER_LANGUAGE C
         C_STANDARD 99)
     target_link_libraries(${test_name} tinycrypt)
+    add_test(NAME ${test_name} COMMAND ${test_name})
 endforeach()

@@ -20,6 +20,7 @@ add_subdirectory(lib)
 
 # Define ENABLE_TESTS macro based on the ENABLE_TESTS variable
 if (ENABLE_TESTS)
+    enable_testing()
     add_compile_definitions(ENABLE_TESTS)
     add_subdirectory(tests)
 else()
